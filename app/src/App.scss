@@ -1,0 +1,13 @@
+.debt-payoff-prioritizer {
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-start;
+
+  &__side-panel {
+    width: 30vw;
+  }
+
+  &__content {
+    width: 70vw;
+  }
+}
