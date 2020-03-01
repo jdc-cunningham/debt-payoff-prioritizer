@@ -16,6 +16,8 @@ const SidePanel = (props) => {
                     This app allows you to enter individual debt balances along with a minimum payment, then rank them top to bottom.
                      After this you can specify how much you can pay and then this tool will distribute that money to apply payments in
                      descending amounts with the greatest amount being applied to the first debt. This is just like the avalanche payoff method.
+                     <br />
+                     If there are any debts where the distributed amount is less than the minimum, some will be taken from the first debt(this gets the most payment).
                 </p>
             </div>
         )
@@ -28,12 +30,12 @@ const SidePanel = (props) => {
                 <span>Balance</span>
                 <span className="wrapper">
                     <span>$</span>
-                    <input ref={ debtInput } type="text" placeholder="0.00" />
+                    <input ref={ debtInput } type="number" placeholder="0.00" />
                 </span>
                 <span>Minimum payment</span>
                 <span className="wrapper">
                     <span>$</span>
-                    <input ref={ minPaymentInput } type="text" placeholder="0.00" />
+                    <input ref={ minPaymentInput } type="number" placeholder="0.00" />
                 </span>
                 <button onClick={ addDebt } type="button">Add Debt</button>
             </div>
@@ -47,7 +49,7 @@ const SidePanel = (props) => {
                 <span>Payment Amount</span>
                 <span className="wrapper">
                     <span>$</span>
-                    <input ref={ paymentInput } type="text" placeholder="0.00" />
+                    <input ref={ paymentInput } type="number" placeholder="0.00" />
                 </span>
                 <button onClick={ setPayment } type="button">Calculate</button>
             </div>
@@ -55,8 +57,20 @@ const SidePanel = (props) => {
     }
 
     // taking in text but expects to be integer or float
-    const formatInput = (input) => {
-
+    // stolen from SO
+    const isNumber = (n) => {
+        if (!n) {
+          var n = this.cardBalance.value;
+        }
+    
+        var regexp = /^[0-9.]*$/;
+        var isIntFloat = regexp.test(n);
+        
+        if (isIntFloat) {
+          return true;
+        }
+    
+        return false;
     }
 
     // these should be dependent props, which ever one runs first can create the other
@@ -65,6 +79,11 @@ const SidePanel = (props) => {
 
         if (!payment.length) {
             alert('Please enter a value for payment');
+            return false;
+        }
+
+        if (!isNumber(payment)) {
+            alert('Please check the format for payment. Example: 0.00 or just 0');
             return false;
         }
 
@@ -90,6 +109,11 @@ const SidePanel = (props) => {
 
         if (!balance.length || !minPayment.length) {
             alert('Please fill in both balance and mininum payment to add a debt');
+            return false;
+        }
+
+        if (!isNumber(balance) || !isNumber(minPayment)) {
+            alert('Please check the format for balance and min payment. Example: 0.00 or just 0');
             return false;
         }
 
